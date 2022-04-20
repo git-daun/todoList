@@ -42,3 +42,7 @@ body {
     justify-content: space-between;
     padding: 8px;
 }
+
+.completeTrue{
+    text-decoration: line-through;
+}
