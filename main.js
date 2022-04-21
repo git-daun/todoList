@@ -1,68 +1,74 @@
-let inputBox = document.getElementById('input-box');
-let plusBtn = document.getElementById('plus-btn');
-let checkBtn = document.getElementById('check-btn');
-let taskInput=[];
-let taskBoard = document.getElementById('task-board');
+let plusBtn=document.getElementById('plus-btn')
+let inputContent=document.getElementById('input-content')
+let listItem=document.getElementById('list-item')
+let taskList=[];
 
-plusBtn.addEventListener("click",addTask);
+plusBtn.addEventListener("click", plusItem)
+inputContent.addEventListener("focus", focus)
 
-function addTask(){
-  let task = {
-    id : randomId(),
-    inputVal : inputBox.value,
-    isComplete : false,
-  }
-  taskInput.push(task)
-  console.log(taskInput)
-  render();
+function focus(){
+    inputContent.value=""
+}
+
+function plusItem(){
+    let itemInfo= {
+        id : randomId(),
+        isComplete : false,
+        contentVal : inputContent.value,        
+    }
+    taskList.push(itemInfo)
+    console.log(taskList)
+    render();
 }
 
 function render(){
-  let resultHTML = '';
-  for(let i=0; i<taskInput.length;i++){
-
-    if(taskInput[i].isComplete == true){
-      resultHTML+=`<div class="task-item">
-    <div class="completeTrue">${taskInput[i].inputVal}</div>
-    <div>
-      <button onclick="taskDone('${taskInput[i].id}')">Check</button>
-      <button onclick="taskDelete('${taskInput[i].id}')">Delete</button>
-    </div>
-  </div>`
-    } else {
-
-      resultHTML+=`<div class="task-item">
-    <div>${taskInput[i].inputVal}</div>
-    <div>
-      <button onclick="taskDone('${taskInput[i].id}')">Check</button>
-      <button  onclick="taskDelete('${taskInput[i].id}')">Delete</button>
-    </div>
-  </div>`
-    }
+    let resultHTML='';
     
-  }
-  document.getElementById('task-board').innerHTML = resultHTML;
-}
+    for(let i=0; i<taskList.length; i++){
+        if(taskList[i].isComplete == false){
+            resultHTML+=`<div class="list-item">
+                        <div>${taskList[i].contentVal}</div>
+                        <div>
+                        <button type="button" class="btn btn-secondary" onclick="checkItem('${taskList[i].id}')" >Check</button>
+                        <button type="button" class="btn btn-secondary" onclick="deleteItem('${taskList[i].id}')">Delete</button>
+                        </div>
+                        </div>` 
+        } else{
+            resultHTML+=` <div class="list-item">
+                        <div class="lineThro">${taskList[i].contentVal}</div>
+                        <div>
+                        <button type="button" class="btn btn-secondary" onclick="checkItem('${taskList[i].id}')" >Check</button>
+                        <button type="button" class="btn btn-secondary" onclick="deleteItem('${taskList[i].id}')">Delete</button>
+                        </div>
+                        </div>` 
+        }
+       
+    }  
+    document.getElementById('list-items').innerHTML=resultHTML;
+    
+} render();
+
 
 function randomId(){
-  return '_' + Math.random().toString(36).substr(2, 9);
+    return Math.random().toString(36).substr(2, 16);
 }
 
-function taskDone(id){
-  
-  for(let i=0;i<taskInput.length; i++){
-    if(taskInput[i].id == id){
-      taskInput[i].isComplete = !taskInput[i].isComplete
-      break;
+function checkItem(id){
+    for(let i=0; i<taskList.length; i++){
+        if(taskList[i].id == id){
+                taskList[i].isComplete = !taskList[i].isComplete 
+                break;                
+        }
     }
-  } render();
+    render();
+    console.log(taskList)
+} 
+
+function deleteItem(id){
+    for(let i=0; i<taskList.length; i++){
+        if(taskList[i].id== id){
+            taskList.splice(i,1)            
+        }
+    } render();
 }
 
-function taskDelete(id){
-  for(let i=0;i<taskInput.length; i++){
-    if(taskInput[i].id == id){
-      taskInput.splice(i,1)
-      break;
-    }
-  } render();
-}
